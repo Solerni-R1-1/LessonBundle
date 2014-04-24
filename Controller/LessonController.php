@@ -25,6 +25,9 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Form\DeleteChapterType;
+use Claroline\CoreBundle\Entity\User;
+use Icap\LessonBundle\Entity\Done;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class LessonController extends Controller
 {
@@ -58,7 +61,20 @@ class LessonController extends Controller
     {
         $this->checkAccess("OPEN", $lesson);
 
-        return $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
+        $return = $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
+		$chapter = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('IcapLessonBundle:Chapter')
+                ->getFirstChapter($lesson);
+
+        if($chapter != null){
+            $return['done'] = $this->getDoneValue($chapter->getId());
+        } else {
+            $return['done'] = false;
+        }
+         $this->populateTreeWithDoneValue($return['tree']);
+
+        return $return;
     }
 
     /**
@@ -86,13 +102,118 @@ class LessonController extends Controller
             throw $this->createNotFoundException("Chapter not found.");
         }
 
-        return $this->getChapterView($lesson, $chapter);
+        $return = $this->getChapterView($lesson, $chapter);
+		$this->populateTreeWithDoneValue($return['tree']);
+        $return['done'] = $this->getDoneValue($chapter->getId());
 
+        return $return;
+    }
+
+	/**
+     * @Route(
+     *      "orange/done/{lessonId}/{done}",
+     *      name="orange_lesson_done",
+     *      requirements={
+     *          "done" = "0|1"
+     *      }
+     * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Chapter", options={"id" = "lessonId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Method("POST")
+     */
+    public function postChapterDone($lesson, $done, $user){
+        $doctrine = $this->getDoctrine();
+        $doneRepository = $doctrine->getRepository('IcapLessonBundle:Done');
+        $chapterRepository = $doctrine->getRepository('IcapLessonBundle:Chapter');
+        //If connected, reply it's done or not
+        if(is_object($user) && $user instanceof User){
+            //Check if user has done this lesson.
+            $doneObject = $doneRepository->find(array('lesson' => $lesson->getId(), 'user' => $user->getId()));
+
+            if($doneObject == null){
+                $doneObject = new Done();
+                $doneObject->setUser($user);
+                $doneObject->setLesson($lesson);
+            }
+
+            $doneObject->setDone($done == 1);
+            $entityManager = $this->getDoctrine()->getEntityManager();
+            $entityManager->persist($doneObject);
+            $entityManager->flush();
+
+            $return = array();
+            //Quick and dirty
+            $totalProgression = 0;
+            $currentProgression = 0;
+            $allChapters = $chapterRepository->findByLesson(array('lesson' => $lesson->getLesson()));
+            foreach($allChapters as $chapter){
+                if($chapter->getLevel() > 1){
+                    if($this->getDoneValue($chapter->getId(), false)){
+                        $currentProgression++;
+                    }
+                    $totalProgression++;
+                }
+            }
+
+            $return['done'] = $doneObject->getDone();
+
+            $return['progression'] = $totalProgression == 0 ? 0 : round($currentProgression / $totalProgression * 100);
+
+            return new JsonResponse($return);
+        }
+        return new JsonResponse(array('error' => 'No user found'));
+    }
+
+    /**
+     * Populate "done values" of a lesson tree. Assumed that it's well formated.
+     * @param array $tree
+     */
+    private function populateTreeWithDoneValue(&$tree){
+        $branchToTreat = array();
+        $currentTreatment = 0;
+        if(isset($tree['__children'])){
+            foreach($tree['__children'] as &$branch){
+                $branchToTreat[] = &$branch;
+                unset($branch);
+            }
+        }
+
+        while(isset($branchToTreat[$currentTreatment])){
+            $branchToTreat[$currentTreatment]['done'] = $this->getDoneValue($branchToTreat[$currentTreatment]['id'], false);
+            foreach($branchToTreat[$currentTreatment]['__children'] as &$child){
+                $branchToTreat[] = &$child;
+                //Free pointer, avoiding overrides
+                unset($child);
+            }
+            $currentTreatment++;
+            //Free pointer
+            unset($nodeValue);
+        }
+    }
+
+    /**
+     *
+     * @param int $lessonID
+     * @return boolean|NULL
+     */
+    private function getDoneValue($lessonID, $noUserValue=null){
+        $user = $this->get('security.context')->getToken()->getUser();
+        //If connected, reply it's done or not
+        if(is_object($user) && $user instanceof User){
+            $done = $this->getDoctrine()
+            ->getRepository('IcapLessonBundle:Done')
+            ->find(array('lesson' => $lessonID, 'user' => $user->getId()));
+            if($done != null){
+                return $done->getDone();
+            }
+            return false;
+        }
+        return $noUserValue;
     }
 
     private function getChapterView($lesson, $chapter){
 
-/*        if ($chapterId != 0) {
+		/* if ($chapterId != 0) {
             $chapter = $this->findChapter($lesson, $chapterId);
             $parent = $chapter;
             $path = $chapterRepository->getPath($chapter);
