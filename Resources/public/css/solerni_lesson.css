@@ -1,0 +1,196 @@
+/* 
+ * This file is part of Solerni.
+ * 
+ * Copyright (C) 2014 Orange
+ * 
+ * Description: CSS for Lesson Bundle Override
+ * 
+ * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
+ */
+
+/* WIDGET LESSONS */
+.slrn-widget--lessons { color: #333333; padding: 0; }
+.slrn-widget__title_link { color: #333333; }
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item .slrn-widget__title_link { color: #E1E1E1; }
+.slrn-widget__title:hover { background-color: #334554; }
+.slrn-widget__list { position: relative; list-style: none inside none; padding: 2em 0 1em 0; overflow: hidden; }
+.slrn-widget__list__item { margin: 0 0 1em 0; position: relative; }
+.slrn-widget__list__item:last-child { margin-bottom: -.6em; }
+
+/* OVERRIDE SORTABLE */
+ul.jquery-sortable-list--lesson { padding-left: 0; padding-top: 0; margin-bottom:0; }
+/* LINK COLOR OF CHAPTER HEADER */
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item.active_chapter .slrn-widget__title_link,
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item .slrn-widget__title_link { color: #EEEEEF; }
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item { background-color: #4B667C;font-size: 1em; padding: .66em; }
+/* CHAPTER HEADER COLOR  */
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item,
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item.active_chapter { background-color: #4B667C; padding-right: 2em; }
+/* CHAPTER HEADER HOVER */
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item .slrn-widget__title_link:hover { text-decoration: none; }
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item.active_chapter:hover ,
+ul.jquery-sortable-list--lesson > .slrn-widget__list__item > .menu-item:hover { background-color: #334554; }
+ul.jquery-sortable-list--lesson li .menu-item { font-size: 1em; padding: 0 0 .66em .66em; }
+.menu_lesson .collapsor { position: absolute; top: .2em; right: .1em; color: #9DAAB6; font-size: 1.8em; font-weight: bold; }
+ul.jquery-sortable-list--lesson ul { padding-left: 0; }
+ul.jquery-sortable-list--lesson li .active_chapter { background: transparent; }
+ul.jquery-sortable-list--lesson li .active_chapter a { color: #D90045; font-weight: normal; }
+
+/* TARGET ONLY FIRST LINKS OF TREE */
+.slrn-widget__list--railroad > .slrn-widget__list__item > .menu-item > .slrn-widget__title_link { font-weight: bold; font-size: .9em; }
+
+/* WIDGET LESSON EDITOR */
+.slrn-widget-row-editor { list-style: none; padding-left: 0; }
+.slrn-widget-row-editor .btn-default.col-xs-12 { margin-bottom: .5em; }
+
+/* RAILROAD */
+.slrn-widget__list--railroad:before {
+    content: "";
+    position: absolute;
+    width: .5em;
+    height: calc( 100% - 3em - 1em );
+    left: 1em;
+    background-color: #FF004F; 
+    top: 2em;
+    box-shadow: 1px 2px 2px #999999;
+}
+.slrn-widget__list--railroad .slrn-widget__list__item {
+    top: -.5em; 
+    padding-left: 2em;
+}
+/* RAILROAD BULLETS */
+.slrn-widget__list--railroad .slrn-widget__list__item:before {
+    content: "";
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: 100%;
+    border: 3px solid #FF004F;
+    position: absolute;
+    left: .6em;
+    top: .15em;
+    background-color: #FFFFFF;
+    box-shadow: 1px 0px #999999;
+}
+.slrn-widget__list--railroad .slrn-widget__list__item.is-done:before { background-color: #FF004F; }
+
+/* drag n drop quick fixers  */ 
+body.dragging .jquery-sortable-list--lesson .slrn-widget__list, 
+body.dragging .jquery-sortable-list--lesson .slrn-widget__list__item { position: static; }
+body.dragging .slrn-widget__list--railroad:before { display: none; }
+body.dragging .slrn-widget__list__item:before { display: none; }
+body.dragging .jquery-sortable-list--lesson ul { outline: #606060 dashed 1px; padding: 1em; }
+body.dragging .jquery-sortable-list--lesson .dragged { position: absolute; }
+body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height: 0; outline: 0; }
+
+.createchapter { padding: 2em 0; display: inline-block; }
+
+/* LESSON CONTENT */
+ .slrn-lesson-main { padding-top: 2em; }
+
+/* SUB LIST */
+.slrn-widget__list--sub { padding: .5em 0; }
+.slrn-widget__list--sub.empty { padding: 0; }
+
+.slrn-widget__list--sub .slrn-widget__list__item { padding-left: 1.6em; font-size: .9em; font-variant: small-caps; top: -.5em; }
+
+.slrn-widget__list--sub .slrn-widget__list__item:before {
+    box-shadow: 1px 2px #999999;
+    width: .8em;
+    height: .8em;
+    border-width: 1px;
+    top: .28em;
+}
+
+/* LESSON CONTENT */
+.slrn-lesson_title { font-size: .8em; text-transform: uppercase; color: #999999; font-weight: bold; margin-bottom: 2em;  }
+.slrn-lesson_chapter-title { font-size: 1.7em; color: #333; font-weight: bold; }
+.slrn-lesson-main .navbar-static-top { margin: 0 0 2em 0; background-color: transparent; border: 0; z-index: auto; }
+.slrn-lesson-main .navbar-static-top .btn { margin: 0 .4em; }
+.slrn-lesson-main .navbar-static-top > .btn:first-child { margin-left: 0; }
+.slrn-lesson-main .navbar-static-top > .btn:last-child { margin-right: 0; }
+.slrn-lesson-main .chapter_content_text { padding: 1em 0; min-height: 10em; }
+
+/* LESSON FOOTER */
+.lesson_footer { background-color: #EEEEEF; }
+.slrn-footer-nav__item { height: 3.1em; line-height: 3.1em; font-size: .9em; }
+.slrn-footer-nav__item a:hover .lesson_footer_icon { text-decoration: none; }
+.lesson_footer_icon { display: inline-block; font-size: 1em; }
+.icon-chevron-left { padding-right: .5em; }
+.icon-chevron-right { padding-left: .5em; }
+
+/* BUTTON DONE LESSON */
+.btn-done-lesson,
+.btn-done-lesson:active,
+.btn-done-lesson:focus {
+    color: #FF004F; 
+    color: rgba( 255, 0, 79, .6 );
+    border: 3px solid #FF004F;
+    border-top-left-radius: 0; 
+    border-bottom-left-radius: 0; 
+    position: relative;
+    height: 2.8em;
+    background-color: transparent;
+    outline: 0;
+    overflow: visible;    
+}
+.btn-done-lesson:active {
+    box-shadow: 1px 1px 6px rgba( 255, 0, 79, .6 ) inset !important;
+    
+}
+.btn-done-lesson:hover {
+    color: #333; 
+    color: rgba( 255, 0, 79, 1 );
+    background-color: transparent;
+    border-color: #FF004F;
+}
+.btn-done-lesson:before { 
+        font-family: "FontAwesome"; 
+        content: "\f00c"; 
+        position: absolute; 
+        color: #FF004F; 
+        color: rgba( 255, 0, 79, .6 ); 
+        border: 3px solid #FF004F;
+        border-top-left-radius: 4px; 
+        border-bottom-left-radius: 4px; 
+        height: 2.8em;
+        width: 2em; 
+        left: -2.4em;
+        top: -3px;
+        line-height: 2.5em;
+        text-align: center;
+}
+.btn-done-lesson.is-done {
+    color: #FFF;
+    background-color: #FF004F;
+}
+.btn-done-lesson.is-done:before {
+    color: #FFF;
+    background-color: #FF004F;
+}
+.btn-done-lesson:disabled,
+.btn-done-lesson:disabled:before {
+    border-color: #E1E1E1;
+    color: #EEEEEF;
+}
+
+.lesson-bundle .slrn-content,
+.lesson-bundle .content { padding-top: 0; }
+
+/*
+* Widget Forum
+* CSS when widget is inserted inside Override Lesson Bundle
+*/
+.slrn-widget-forum { background-color: #EEEEEF; padding: 1em 1.3em; margin-bottom: 2em; }
+.slrn-widget-forum__title { 
+    text-transform: uppercase;
+    font-size: 1.3em;
+    margin: 0 0 1em 0;
+    color: #333;
+    font-weight: bold;
+}
+.slrn-widget-forum__afficher-tout { float: right; color: #FF004F; }
+.slrn-list-group { border-radius: 0; background-color: transparent;  }
+.slrn-list-group-item { border-radius: 0; background-color: transparent; border: 0; }
+.slrn-message-header { font-weight: bold; color: #333; }
+.slrn-sep { margin: 1em 0 3.5em 0; }
+.slrn-list-group-link, .slrn-list-group-link:hover { color: #333; }

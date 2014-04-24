@@ -3,14 +3,16 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/icaplesson/css/styles.css') }}" screen="media" />
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/icaplesson/css/solerni_lesson.css') }}" screen="media" />   
 {% endblock %}
 
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
+{#  WE DO NOT USE BREADCRUMBS
 {% block resourceBreadcrumb %}
-{#    {{ parent() }}#}
+    {{ parent() }}
     {% if path is defined and path != null %}
         <li>
             <a href="{{ path('icap_lesson', { 'resourceId': _resource.id}) }}">{{ _resource.getResourceNode().getName() }}</a>
@@ -20,10 +22,12 @@
         {{ parent() }}
     {% endif %}
 {% endblock %}
+#}
+
+{% block bodyClasses %}{{ parent() }} lesson-bundle{% endblock %}
 
 {% block content %}
-    {% block lesson_content %}
-    {% endblock %}
+    {% block lesson_content %}{% endblock %}
 {% endblock %}
 
 {% macro chapterBreadcrumb(path, _resource, chapter) %}

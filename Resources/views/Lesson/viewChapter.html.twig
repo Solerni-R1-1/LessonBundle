@@ -1,73 +1,113 @@
 {% extends 'IcapLessonBundle:Lesson:layout.html.twig' %}
 {% block lesson_content %}
     <a id='top'></a>
-    <h3 class="lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
-    {{ macros.flashBox() }}
-    <div class="row">
-        {% if chapter is defined and chapter != null %}
-            <div class="col-md-3" id='lesson_left_column'>
-                {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
-            </div>
-            <div class="col-md-9">
-               <div class='panel panel-default' id='chapter_content'>
-                   <div class='panel-heading chapter_title'><h4>{{ chapter.title }}</h4></div>
-                   {% if is_granted('EDIT', node) %}
-                       <div class="navbar navbar-default navbar-static-top">
-                           <ul class='nav navbar-nav pull-right'>
-                               <li><a rel="tooltip" data-original-title='{{ 'create_subchapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="createchapter btn lesson_tooltip" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}" ><span class="icon-plus"></span><span class='chapter_menu_labels'>{{ 'new_subchapter'|trans({}, 'icap_lesson') }}</span></a></li>
-                               <li><a rel="tooltip" data-original-title='{{ 'edit_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="editchapter btn lesson_tooltip" href="{{ path('icap_lesson_edit_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-edit"></span><span class='chapter_menu_labels'>{{ 'edit'|trans({}, 'icap_lesson') }}</span></a></li>
-                               <li><a rel="tooltip" data-original-title='{{ 'move_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="movechapter btn lesson_tooltip" href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-move"></span></a></li>
-                               <li><a rel="tooltip" data-original-title='{{ 'duplicate_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="duplicatechapter btn lesson_tooltip" href="{{ path('icap_lesson_duplicate_form_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-copy"></span></a></li>
-                               <li><a rel="tooltip" data-original-title='{{ 'delete_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="deletechapter btn lesson_tooltip" href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-trash"></span></a></li>
-                           </ul>
+    {# RIGHT COLUMN : APPRENDRE. 25% #}
+    <div class="col-xs-3 col-md-3">
+        {# FIRST : MOOC  WIDGET #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getWorkspacePresentationWidget',
+            {'workspaceId': workspace.getId() }
+        ) %}
+        {# SECOND : BADGES WIDGET #}
+        {% render controller(
+            'ClarolineCoreBundle:Solerni:getWorkspaceUserBadgesWidget',
+            {'workspaceId': workspace.getId() }
+        ) %}
+        {# THIRD : LESSONS WIDGET #}
+        {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
+    </div>
+    <article class="col-xs-9 col-md-9 slrn-lesson-main">
+        {% if is_granted('EDIT', node) and chapter is defined and chapter != null %}
+        <div class="navbar navbar-default navbar-static-top">
+            <ul class='nav navbar-nav pull-right'>
+                <li class="btn btn-default"><a rel="tooltip" data-original-title='{{ 'create_subchapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="createchapter btn lesson_tooltip" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}" ><span class="icon-plus"></span><span class='chapter_menu_labels'>{{ 'new_subchapter'|trans({}, 'icap_lesson') }}</span></a></li>
+                <li class="btn btn-default"><a rel="tooltip" data-original-title='{{ 'edit_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="editchapter btn lesson_tooltip" href="{{ path('icap_lesson_edit_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-edit"></span><span class='chapter_menu_labels'>{{ 'edit'|trans({}, 'icap_lesson') }}</span></a></li>
+                <li class="btn btn-default"><a rel="tooltip" data-original-title='{{ 'move_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="movechapter btn lesson_tooltip" href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-move"></span></a></li>
+                <li class="btn btn-default"><a rel="tooltip" data-original-title='{{ 'duplicate_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="duplicatechapter btn lesson_tooltip" href="{{ path('icap_lesson_duplicate_form_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-copy"></span></a></li>
+                <li class="btn btn-default"><a rel="tooltip" data-original-title='{{ 'delete_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="deletechapter btn lesson_tooltip" href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><span class="icon-trash"></span></a></li>
+            </ul>
+        </div>
+        {%  endif  %}
+        <h3 class="slrn-lesson_title lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
+        {{ macros.flashBox() }}
+        <div class="row">
+            {% if chapter is defined and chapter != null %}
+                <div class="col-md-12 col-xs-12">
+                    <div class='panel panel-default' id='chapter_content'>
+                        <div class='panel-heading chapter_title'><h4 class="slrn-lesson_chapter-title">{{ chapter.title }}</h4></div>
+                        <div class='chapter_content_text'>
+                           {{ chapter.text | raw }}
+                        </div>
+                        <div class="slrn-forum-widget">
+                        {# FORUM WIDGET #}
+                        <hr class="slrn-sep" />   
+                        {% render controller( 'ClarolineForumBundle:Forum:forumsWorkspaceWidget', {'workspaceId': workspace.getId() } ) %}
+                        </div>
+                        <div class='lesson_footer clearfix'>
+                            <div class='col-xs-4 col-md-4 slrn-footer-nav__item align_left'>
+                                {% if previous != null and checkChapterLevel( tree, previous ) > 1 %}
+                                    <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'>
+                                        <i class='icon-chevron-left lesson_footer_icon'></i>{{ 'previous_lesson'|trans({}, 'platform')}}
+                                    </a>
+                                {% else %}
+                                    {# <i rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-backward lesson_footer_icon'></i> #}
+                                {% endif %}
+                            </div>
+                            <div class='col-md-4'>
+                                {# <a href='#wrap'>{{ 'back_top'|trans({}, 'icap_lesson') }}</a>#}
+                                {% if done is not null %}
+                                    {% if done == false %}
+                                        {% set tooltipMessage = 'lesson_button_done_tooltip'|trans({}, 'platform' ) %}
+                                        {% set tooltipMessageAlt = 'lesson_button_undone_tooltip'|trans({}, 'platform' ) %}
+                                    {% else %}
+                                        {% set tooltipMessage = 'lesson_button_undone_tooltip'|trans({}, 'platform' ) %}
+                                        {% set tooltipMessageAlt = 'lesson_button_done_tooltip'|trans({}, 'platform' ) %}
+                                    {% endif %}
+                                    <button class="btn btn-default btn-done-lesson lesson_tooltip{% if done == true %} is-done{% endif %}" data-original-title="{{ tooltipMessage }}" data-alternate-title="{{ tooltipMessageAlt }}" disabled="disabled" data-action-url="{{ path('orange_lesson_done', {'lessonId': chapter.id, 'done': ( done ? 0 : 1 ) } ) }}" data-target-id="{{ chapter.id }}" data-alternate-url="{{ path('orange_lesson_done', {'lessonId': chapter.id, 'done': ( done ? 1 : 0 ) } ) }}">
+                                        {{ 'lesson_button_done'|trans({}, 'platform') }}
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class='col-md-4 col-xs-4 slrn-footer-nav__item align_right'>
+                               {% if next != null and checkChapterLevel( tree, next ) > 1 %}
+                                   <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'>
+                                       {{ 'next_lesson'|trans({}, 'platform')}}<i class='icon-chevron-right lesson_footer_icon'></i>
+                                   </a>
+                               {% else %}
+                                  {# <i rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-forward lesson_footer_icon'></i> #}
+                               {% endif %}
+                           </div>
                        </div>
-                   {%  endif  %}
-                   <div class='chapter_content_text'>
-                       {{ chapter.text | raw }}
                    </div>
-                   <div class='lesson_footer row'>
-                       <div class='col-md-1 align_left'>
-                           {% if previous != null %}
-                                <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'><i class='icon-backward lesson_footer_icon'></i></a>
-                           {% else %}
-                              <i rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-backward lesson_footer_icon'></i>
-                           {% endif %}
-                       </div>
-                       <div class='col-md-10'>
-                           <a href='#wrap'>{{ 'back_top'|trans({}, 'icap_lesson') }}</a>
-                       </div>
-                       <div class='col-md-1 align_right'>
-                           {% if next != null %}
-                               <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'><i class='icon-forward lesson_footer_icon'></i></a>
-                           {% else %}
-                               <i rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-forward lesson_footer_icon'></i>
-                           {% endif %}
-                       </div>
-                   </div>
-               </div>
-            </div>
-        {% else %}
-            <div class="col-md-12">
-                <div class='panel panel-default' id='chapter_content'>
-                    <div class='chapter_content_text'>
-                        <div class='welcome'>
-                            <div>{{ 'lesson_welcome'|trans({}, 'icap_lesson') }}</div>
-                            {% if is_granted('EDIT', node) %}
-                                <div><a class="createchapter" href='{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}'>{{ 'lesson_welcome_create'|trans({}, 'icap_lesson') }}</a></div>
-                            {% endif %}
+                </div>
+            {% else %}
+                <div class="col-md-12">
+                    <div class='panel panel-default' id='chapter_content'>
+                        <div class='chapter_content_text'>
+                            <div class='welcome'>
+                                <div>{{ 'lesson_welcome'|trans({}, 'icap_lesson') }}</div>
+                                {% if is_granted('EDIT', node) %}
+                                    <div><a class="createchapter" href='{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}'>{{ 'lesson_welcome_create'|trans({}, 'icap_lesson') }}</a></div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    </article>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    <!--[if IE 8 ]>
+        <script src="{{ asset('bundles/orangelesson/js/railroad.js') }}"></script>
+    <![endif]-->
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/ajaxifyLesson.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/lesson.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/ajaxifyLesson.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/lesson.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/lessonDone.js') }}'></script>
+
     <script type="text/javascript">
         init();
     </script>
