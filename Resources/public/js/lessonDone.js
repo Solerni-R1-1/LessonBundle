@@ -80,6 +80,7 @@ jQuery( document ).ready(function() {
      * Find the current Chapter -> get pertinent parent -> get siblings -> get collapsors -> trigger collapsors
      */
     currentChapterId = window.location.href.split('/').pop();
+    currentChapterId = currentChapterId.split('?')[0];
     chapterContainer = jQuery('.jquery-sortable-list--lesson');
     currentChapterBlockSiblingsCollapsors = chapterContainer.find('#' + currentChapterId ).parents('.jquery-sortable-list--lesson > .slrn-widget__list__item').siblings('.slrn-widget__list__item').find('.collapsor');
     currentChapterBlockSiblingsCollapsors.each( function() {
