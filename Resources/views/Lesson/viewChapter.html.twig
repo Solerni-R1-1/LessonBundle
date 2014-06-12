@@ -28,7 +28,17 @@
             </ul>
         </div>
         {%  endif  %}
-        <h3 class="slrn-lesson_title lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
+        <h3 class="slrn-lesson_title lesson_title">
+            {% set myParent = chapter %}
+            {% set myParentLevel = chapter.level %}
+            {% for i in 1..myParentLevel %}
+                {% if i != 1 %}
+                    {% set myParent = myParent.parent %}
+                {% endif %}
+            {% endfor %}
+            {{myParent.title}}
+        </h3>
+        
         {{ macros.flashBox() }}
         <div class="row">
             {% if chapter is defined and chapter != null %}
