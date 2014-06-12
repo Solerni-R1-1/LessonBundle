@@ -102,22 +102,22 @@ function initCollapsor(){
 
 function toggleCollapsor(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).toggle(300);
-    $('#collapsor_icon_'+chapter_id).toggleClass('icon-caret-down');
-    $('#collapsor_icon_'+chapter_id).toggleClass('icon-caret-right');
+    $('#list_'+chapter_id).slideToggle(300);
+    $('#collapsor_icon_'+chapter_id).toggleClass('icon-angle-down');
+    $('#collapsor_icon_'+chapter_id).toggleClass('icon-angle-right');
 }
 
 function collapse(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).hide(300);
-    $('#collapsor_icon_'+chapter_id).removeClass('icon-caret-down');
-    $('#collapsor_icon_'+chapter_id).addClass('icon-caret-right');
+    $('#list_'+chapter_id).slideUp(300);
+    $('#collapsor_icon_'+chapter_id).removeClass('icon-angle-down');
+    $('#collapsor_icon_'+chapter_id).addClass('icon-angle-right');
 }
 
 function expand(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).show(300);
-    $('#collapsor_icon_'+chapter_id).addClass('icon-caret-down');
+    $('#list_'+chapter_id).slideDown(300);
+    $('#collapsor_icon_'+chapter_id).addClass('icon-angle-down');
     $('#collapsor_icon_'+chapter_id).removeClass('icon-expand');
 }
 
