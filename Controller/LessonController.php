@@ -99,7 +99,9 @@ class LessonController extends Controller
         }
 
         if (null === $chapter) {
-            throw $this->createNotFoundException("Chapter not found.");
+            //Redirect to main lesson
+            return $this->viewLessonAction($lesson);
+            //throw $this->createNotFoundException("Chapter not found.");
         }
 
         $return = $this->getChapterView($lesson, $chapter);
