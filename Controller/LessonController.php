@@ -93,11 +93,14 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewChapterAction($lesson, $chapterId)
+    public function viewChapterAction(Lesson $lesson, $chapterId, User $user)
     {
         $this->checkAccess("OPEN", $lesson);
+        $workspace = $lesson->getResourceNode()->getWorkspace();
+        
         $chapter = null;
         //ugly fix for compliance with old permalinks using chapter ID
         if(is_numeric($chapterId)){
@@ -115,6 +118,7 @@ class LessonController extends Controller
 
         $return = $this->getChapterView($lesson, $chapter);
 		$this->populateTreeWithDoneValue($return['tree']);
+		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
         $return['done'] = $this->getDoneValue($chapter->getId());
 
         return $return;
