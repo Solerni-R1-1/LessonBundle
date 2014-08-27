@@ -52,8 +52,10 @@
                         </div>
                         <div class="slrn-forum-widget">
                         {# FORUM WIDGET #}
-                        <hr class="slrn-sep" />   
-                        {% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
+                        <hr class="slrn-sep" />
+                        {% if session %}   
+                        	{% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
+                        {% endif %}
                         </div>
                         <div class='lesson_footer clearfix'>
                             <div class='col-xs-4 col-md-4 slrn-footer-nav__item align_left'>
