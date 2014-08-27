@@ -37,15 +37,21 @@ class LessonController extends Controller
      * @param Lesson $lesson
      * @throws AccessDeniedException
      */
-    protected function checkAccess($permission, Lesson $lesson)
+    protected function checkAccess($permission, Lesson $lesson, $throwException = true)
     {
         $collection = new ResourceCollection(array($lesson->getResourceNode()));
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	if ($throwException) {
+            	throw new AccessDeniedException($collection->getErrorsForDisplay());
+        	} else {
+        		return false;
+        	}
         }
 
         $logEvent = new LogResourceReadEvent($lesson->getResourceNode());
         $this->get('event_dispatcher')->dispatch('log', $logEvent);
+        
+        return true;
     }
 
     /**
@@ -59,22 +65,25 @@ class LessonController extends Controller
     */
     public function viewLessonAction($lesson)
     {
-        $this->checkAccess("OPEN", $lesson);
+        if ($this->checkAccess("OPEN", $lesson, false)) {
 
-        $return = $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
-		$chapter = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('IcapLessonBundle:Chapter')
-                ->getFirstChapter($lesson);
-
-        if($chapter != null){
-            $return['done'] = $this->getDoneValue($chapter->getId());
+	        $return = $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
+			$chapter = $this->getDoctrine()
+	                ->getManager()
+	                ->getRepository('IcapLessonBundle:Chapter')
+	                ->getFirstChapter($lesson);
+	
+	        if($chapter != null){
+	            $return['done'] = $this->getDoneValue($chapter->getId());
+	        } else {
+	            $return['done'] = false;
+	        }
+	         $this->populateTreeWithDoneValue($return['tree']);
+	
+	        return $return;
         } else {
-            $return['done'] = false;
+        	return $this->redirect($this->get('router')->generate('mooc_view', array('moocId' => $lesson->getResourceNode()->getWorkspace()->getMooc()->getId(), 'moocName' => $lesson->getResourceNode()->getWorkspace()->getMooc()->getTitle())));
         }
-         $this->populateTreeWithDoneValue($return['tree']);
-
-        return $return;
     }
 
     /**
