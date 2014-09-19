@@ -73,17 +73,16 @@ jQuery( document ).ready(function() {
     jQuery('.slrn-widget--badges .collapsor').on( 'click', function() {
         fullListBadges.slideToggle( 250, 'linear' );
     });
-    
+
     /*
      * Close all Lesson Collapsor
      * except the last one see.
      * Find the current Chapter -> get pertinent parent -> get siblings -> get collapsors -> trigger collapsors
      */
-    currentChapterId = window.location.href.split('/').pop();
-    currentChapterId = currentChapterId.split('?')[0];
-    chapterContainer = jQuery('.jquery-sortable-list--lesson');
-    currentChapterBlockSiblingsCollapsors = chapterContainer.find('#' + currentChapterId ).parents('.jquery-sortable-list--lesson > .slrn-widget__list__item').siblings('.slrn-widget__list__item').find('.collapsor');
-    currentChapterBlockSiblingsCollapsors.each( function() {
-        collapse( jQuery( this ) );
-    })
+    currentChapterId = jQuery('#chapter_content').data('current-chapter');
+    jQuery('#lesson_menu > .slrn-widget__list__item').each(function() {
+        if ( jQuery( this ).find( '#' + currentChapterId ).length == 0 ) {
+            collapse( jQuery( this ).find('.collapsor') );
+        }
+    });
 });
