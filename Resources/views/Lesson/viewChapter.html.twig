@@ -5,7 +5,7 @@
     <div class="col-xs-3 col-md-3">
         {# FIRST : MOOC  WIDGET #}
         {% render controller(
-            'ClarolineCoreBundle:Solerni:getWorkspacePresentationWidget',
+            'ClarolineCoreBundle:Mooc\\Mooc:getWorkspacePresentationWidget',
             {'workspaceId': workspace.getId() }
         ) %}
         {# SECOND : BADGES WIDGET #}
@@ -29,29 +29,33 @@
         </div>
         {%  endif  %}
         <h3 class="slrn-lesson_title lesson_title">
-            {% set myParent = chapter %}
-            {% set myParentLevel = chapter.level %}
-            {% for i in 1..myParentLevel %}
-                {% if i != 1 %}
-                    {% set myParent = myParent.parent %}
-                {% endif %}
-            {% endfor %}
-            {{myParent.title}}
+            {% if chapter.level is defined %}
+                {% set myParent = chapter %}
+                {% set myParentLevel = chapter.level %}
+                {% for i in 1..myParentLevel %}
+                    {% if i != 1 %}
+                        {% set myParent = myParent.parent %}
+                    {% endif %}
+                {% endfor %}
+                {{myParent.title}}
+            {% endif %}
         </h3>
         
         {{ macros.flashBox() }}
         <div class="row">
             {% if chapter is defined and chapter != null %}
                 <div class="col-md-12 col-xs-12">
-                    <div class='panel panel-default' id='chapter_content'>
+                    <div class='panel panel-default' id='chapter_content' data-current-chapter="{{chapter.getId()}}">
                         <div class='panel-heading chapter_title'><h4 class="slrn-lesson_chapter-title">{{ chapter.title }}</h4></div>
                         <div class='chapter_content_text'>
                            {{ chapter.text | raw }}
                         </div>
                         <div class="slrn-forum-widget">
                         {# FORUM WIDGET #}
-                        <hr class="slrn-sep" />   
-                        {% render controller( 'ClarolineForumBundle:Forum:forumsWorkspaceWidget', {'workspaceId': workspace.getId() } ) %}
+                        <hr class="slrn-sep" />
+                        {% if session is defined and session %}   
+                        	{% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
+                        {% endif %}
                         </div>
                         <div class='lesson_footer clearfix'>
                             <div class='col-xs-4 col-md-4 slrn-footer-nav__item align_left'>
@@ -63,7 +67,7 @@
                                     {# <i rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-backward lesson_footer_icon'></i> #}
                                 {% endif %}
                             </div>
-                            <div class='col-md-4'>
+                            <div class='col-md-4 col-xs-4'>
                                 {# <a href='#wrap'>{{ 'back_top'|trans({}, 'icap_lesson') }}</a>#}
                                 {% if done is not null %}
                                     {% if done == false %}
