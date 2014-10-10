@@ -53,7 +53,7 @@
                         <div class="slrn-forum-widget">
                         {# FORUM WIDGET #}
                         <hr class="slrn-sep" />
-                        {% if session is defined and session %}   
+                        {% if session is defined and session and session.getForum()|default %}
                         	{% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
                         {% endif %}
                         </div>
