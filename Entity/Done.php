@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Entity\User;
  * Done
  *
  * @ORM\Table("orange_done")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\DoneRepository")
  */
 class Done
 {
