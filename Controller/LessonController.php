@@ -183,27 +183,57 @@ class LessonController extends Controller
      * Populate "done values" of a lesson tree. Assumed that it's well formated.
      * @param array $tree
      */
-    private function populateTreeWithDoneValue(&$tree){
-        $branchToTreat = array();
-        $currentTreatment = 0;
-        if(isset($tree['__children'])){
-            foreach($tree['__children'] as &$branch){
-                $branchToTreat[] = &$branch;
-                unset($branch);
-            }
-        }
+    private function populateTreeWithDoneValue(&$tree){	    	
+		$flattenedTree = array();
+		// Flatten tree...
+		$this->flattenTree($tree,$flattenedTree);
 
-        while(isset($branchToTreat[$currentTreatment])){
-            $branchToTreat[$currentTreatment]['done'] = $this->getDoneValue($branchToTreat[$currentTreatment]['id'], false);
-            foreach($branchToTreat[$currentTreatment]['__children'] as &$child){
-                $branchToTreat[] = &$child;
-                //Free pointer, avoiding overrides
-                unset($child);
-            }
-            $currentTreatment++;
-            //Free pointer
-            unset($nodeValue);
-        }
+		$isUser = false;
+		$user = $this->get('security.context')->getToken()->getUser();
+		// If user is connected
+		if(is_object($user) && $user instanceof User) {
+			$doneRepo = $this->getDoctrine()->getRepository('IcapLessonBundle:Done');
+			
+			$ids = array();
+			foreach ($flattenedTree as $chapter) {
+				$ids[] = $chapter['id'];
+			}
+			$dones = $doneRepo->getDonesByUserAndChapterIn($user, $ids);
+			
+			$orderedDones = array();
+			foreach ($dones as $done) {
+				$orderedDones[$done->getLesson()->getId()] = $done;
+			}
+			
+			foreach ($flattenedTree as &$chapter) {
+				if (array_key_exists($chapter['id'], $orderedDones)) {
+					$done = $orderedDones[$chapter['id']];
+					$chapter['done'] = $done->getDone();
+				} else {
+					$chapter['done'] = false;
+				}
+			}
+			
+		// If user is not connected, set all "done" as false
+		} else {
+			foreach ($flattenedTree as &$chapter) {
+				$chapter['done'] = false;
+			}
+		}
+		
+		
+		
+		
+		
+    }
+    
+    private function flattenTree(&$tree, &$result) {
+    	$result[] = &$tree;
+    	if (array_key_exists('__children', $tree)) {
+    		foreach ($tree['__children'] as &$child) {
+    			$this->flattenTree($child, $result);
+    		}
+    	}
     }
 
     /**

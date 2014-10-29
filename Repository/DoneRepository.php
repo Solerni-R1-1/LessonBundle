@@ -32,4 +32,20 @@ class DoneRepository extends EntityRepository {
 		
 		return $query->getSingleScalarResult();
 	}
+	
+	public function getDonesByUserAndChapterIn(User $user, array $chapterIds) {
+		$dql = "SELECT d
+				FROM Icap\LessonBundle\Entity\Done d
+				JOIN d.lesson c
+					WITH c IN (:chapterIds)
+				JOIN d.user u
+					WITH u = :user";
+
+
+		$query = $this->_em->createQuery($dql);
+		$query->setParameter("user", $user);
+		$query->setParameter("chapterIds", $chapterIds);
+		
+		return $query->getResult();
+	}
 }
