@@ -117,9 +117,8 @@ class LessonController extends Controller
         }
 
         $return = $this->getChapterView($lesson, $chapter);
-		$this->populateTreeWithDoneValue($return['tree']);
+		$return['done'] = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
 		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
-        $return['done'] = $this->getDoneValue($chapter->getId());
 
         return $return;
     }
@@ -183,7 +182,7 @@ class LessonController extends Controller
      * Populate "done values" of a lesson tree. Assumed that it's well formated.
      * @param array $tree
      */
-    private function populateTreeWithDoneValue(&$tree){	    	
+    private function populateTreeWithDoneValue(&$tree, $returnValueForId = -1){	    	
 		$flattenedTree = array();
 		// Flatten tree...
 		$this->flattenTree($tree,$flattenedTree);
@@ -221,9 +220,11 @@ class LessonController extends Controller
 			}
 		}
 		
-		
-		
-		
+		if ($returnValueForId != -1) {
+			return array_key_exists($returnValueForId, $orderedDones) ? $orderedDones[$returnValueForId] : false;
+		} else {
+			return false;
+		}
 		
     }
     
