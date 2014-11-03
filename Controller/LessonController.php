@@ -73,8 +73,7 @@ class LessonController extends Controller
 			$chapter = $this->getDoctrine()
 	                ->getManager()
 	                ->getRepository('IcapLessonBundle:Chapter')
-	                ->getFirstChapter($lesson);
-			
+	                ->getFirstChapter($lesson);			
 			
 			$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
 			if ($return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()) {
@@ -87,7 +86,10 @@ class LessonController extends Controller
 				$return['done'] = null;
 			}
         	
-	        $this->populateTreeWithDoneValue($return['tree']);
+	        if ($return['tree'] != null) {
+	        	$this->populateTreeWithDoneValue($return['tree']);
+	        }
+
 	
 	        return $return;
         } else {
@@ -126,8 +128,15 @@ class LessonController extends Controller
         }
 
         $return = $this->getChapterView($lesson, $chapter);
-		$done = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
+
 		
+
+        if ($return['tree'] != null) {
+			$done = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
+        } else {
+        	$done = null;
+        }
+
 		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
 		
 		if ($return['session']->getMooc()->getLesson()->getId() != $lesson->getResourceNode()->getId()) {
