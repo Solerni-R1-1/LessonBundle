@@ -78,7 +78,10 @@ class LessonController extends Controller
 	        } else {
 	            $return['done'] = false;
 	        }
-	         $this->populateTreeWithDoneValue($return['tree']);
+	        
+	        if ($return['tree'] != null) {
+	         	$this->populateTreeWithDoneValue($return['tree']);
+	        }
 	
 	        return $return;
         } else {
@@ -117,7 +120,11 @@ class LessonController extends Controller
         }
 
         $return = $this->getChapterView($lesson, $chapter);
-		$return['done'] = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
+        if ($return['tree'] != null) {
+			$return['done'] = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
+        } else {
+        	$return['done'] = null;
+        }
 		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
 
         return $return;
