@@ -57,6 +57,9 @@
                         	{% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
                         {% endif %}
                         </div>
+                        {% if (previous != null and checkChapterLevel( tree, previous ) > 1)
+                        	or (done is not null)
+                        	or (next != null and checkChapterLevel( tree, next ) > 1) %}
                         <div class='lesson_footer clearfix'>
                             <div class='col-xs-4 col-md-4 slrn-footer-nav__item align_left'>
                                 {% if previous != null and checkChapterLevel( tree, previous ) > 1 %}
@@ -92,6 +95,7 @@
                                {% endif %}
                            </div>
                        </div>
+                       {% endif %}
                    </div>
                 </div>
             {% else %}
