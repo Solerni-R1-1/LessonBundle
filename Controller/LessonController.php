@@ -61,27 +61,35 @@ class LessonController extends Controller
     *      requirements={"resourceId" = "\d+"}
     * )
     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+    * @ParamConverter("user", options={"authenticatedUser" = true})
     * @Template("IcapLessonBundle:Lesson:viewChapter.html.twig")
     */
-    public function viewLessonAction($lesson)
+    public function viewLessonAction($lesson, User $user)
     {
         if ($this->checkAccess("OPEN", $lesson, false)) {
 
+        	$workspace = $lesson->getResourceNode()->getWorkspace();
 	        $return = $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
 			$chapter = $this->getDoctrine()
 	                ->getManager()
 	                ->getRepository('IcapLessonBundle:Chapter')
-	                ->getFirstChapter($lesson);
-	
-	        if($chapter != null){
-	            $return['done'] = $this->getDoneValue($chapter->getId());
-	        } else {
-	            $return['done'] = false;
-	        }
-	        
+	                ->getFirstChapter($lesson);			
+			
+			$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
+			if ($return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()) {
+		        if ($chapter != null) {
+		            $return['done'] = $this->getDoneValue($chapter->getId());
+		        } else {
+		            $return['done'] = false;
+		        }
+			} else {
+				$return['done'] = null;
+			}
+        	
 	        if ($return['tree'] != null) {
-	         	$this->populateTreeWithDoneValue($return['tree']);
+	        	$this->populateTreeWithDoneValue($return['tree']);
 	        }
+
 	
 	        return $return;
         } else {
@@ -120,13 +128,23 @@ class LessonController extends Controller
         }
 
         $return = $this->getChapterView($lesson, $chapter);
-        if ($return['tree'] != null) {
-			$return['done'] = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
-        } else {
-        	$return['done'] = null;
-        }
-		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
 
+		
+
+        if ($return['tree'] != null) {
+			$done = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
+        } else {
+        	$done = null;
+        }
+
+		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
+		
+		if ($return['session']->getMooc()->getLesson()->getId() != $lesson->getResourceNode()->getId()) {
+			$done = null;
+		}
+		
+		$return['done'] = $done;
+		
         return $return;
     }
 
@@ -189,10 +207,10 @@ class LessonController extends Controller
      * Populate "done values" of a lesson tree. Assumed that it's well formated.
      * @param array $tree
      */
-    private function populateTreeWithDoneValue(&$tree, $returnValueForId = -1){	    	
+    private function populateTreeWithDoneValue(&$tree, $returnValueForId = -1) {	    	
 		$flattenedTree = array();
 		// Flatten tree...
-		$this->flattenTree($tree,$flattenedTree);
+		$this->flattenTree($tree, $flattenedTree);
 
 		$isUser = false;
 		$user = $this->get('security.context')->getToken()->getUser();
