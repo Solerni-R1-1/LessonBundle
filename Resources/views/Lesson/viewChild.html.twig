@@ -3,6 +3,8 @@
     {# IF CHILD EMPTY -> MAKE IT SORTABLE #}
     {# IF IS ROOT / depth == 0 -> START A NEW UL CONTAINER WITH TITLE #}
     {# IF DEPTH == 1 -> RAILROAD CONTAINER #}
+
+    {# Careful : the child.done value is boolean, the done variable for the done button is an Done object #}
    
     {% if depth == 0 %}
         <ul data-depth="{{ (depth) }}" class="slrn-widget__list slrn-widget jquery-sortable-list jquery-sortable-list--lesson{% if root.__children|length == 0%} empty{% endif %}" data-list= "{{ root.id }}" id="lesson_menu">
@@ -64,9 +66,6 @@
         {% set depth = 0 %}
         {{ _self.recursiveChapter( tree, chapter, _resource, true, depth ) }}
         <br />
-        {# <form id='moveform' action ='{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}' method='post' style='display:none;'>
-            {{ form_rest(form) }}
-        </form>#}
         <div style='display:none;' id = 'moveChapterFormContainer'>
             {% include 'IcapLessonBundle:Lesson:choiceMoveChapterForm.html.twig' %}
         </div>
