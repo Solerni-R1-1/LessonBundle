@@ -113,7 +113,7 @@ class LessonController extends Controller
         $workspace = $lesson->getResourceNode()->getWorkspace();
         
         $chapter = null;
-        //ugly fix for compliance with old permalinks using chapter ID
+        //for compliance with old permalinks using chapter ID
         if(is_numeric($chapterId)){
            $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterById($chapterId, $lesson->getId());
         }
@@ -143,7 +143,7 @@ class LessonController extends Controller
 			$done = null;
 		}
 		
-		$return['done'] = $done;
+		$return['done'] = $done->getDone();
 		
         return $return;
     }
@@ -175,7 +175,7 @@ class LessonController extends Controller
                 $doneObject->setLesson($lesson);
             }
 
-            $doneObject->setDone($done == 1);
+            $doneObject->setDone($done);
             $entityManager = $this->getDoctrine()->getEntityManager();
             $entityManager->persist($doneObject);
             $entityManager->flush();
@@ -272,8 +272,8 @@ class LessonController extends Controller
         //If connected, reply it's done or not
         if(is_object($user) && $user instanceof User){
             $done = $this->getDoctrine()
-            ->getRepository('IcapLessonBundle:Done')
-            ->find(array('lesson' => $lessonID, 'user' => $user->getId()));
+                ->getRepository('IcapLessonBundle:Done')
+                ->find(array('lesson' => $lessonID, 'user' => $user->getId()));
             if($done != null){
                 return $done->getDone();
             }
