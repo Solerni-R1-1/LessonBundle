@@ -143,7 +143,7 @@ class LessonController extends Controller
 			$done = null;
 		}
 		
-		$return['done'] = $done->getDone();
+		$return['done'] = ( $done instanceof Done ) ? $done->getDone() : false;
 		
         return $return;
     }
