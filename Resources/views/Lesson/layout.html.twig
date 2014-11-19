@@ -41,25 +41,3 @@
 {% endmacro %}
 
 
-{% block javascripts %}
-    {{ parent() }}
-
-    <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/headroom.0.7.0.min.js') }}'></script>
-    <script type="text/javascript">
-        
-        $( document ).ready(function() {
-            
-            // grab an element
-            var myElement = document.querySelector(".slrn-subnavbar-container");
-            
-            // construct an instance of Headroom, passing the element
-            var headroom  = new Headroom(myElement, {
-              "offset": 136,
-              "tolerance": 0
-            });
-
-            // initialise
-            headroom.init(); 
-        });
-    </script>
-{% endblock %}
