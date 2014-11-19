@@ -194,3 +194,14 @@ body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height
 .slrn-message-header { font-weight: bold; color: #333; }
 .slrn-sep { margin: 1em 0 3.5em 0; }
 .slrn-list-group-link, .slrn-list-group-link:hover { color: #333; }
+
+/**************** Sticky bar ******************/
+.headroom {
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
