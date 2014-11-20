@@ -195,3 +195,5 @@ body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height
 .slrn-sep { margin: 1em 0 3.5em 0; }
 .slrn-list-group-link, .slrn-list-group-link:hover { color: #333; }
 
+.slrn-disabled-chapter { color: #AAA; }
+.slrn-disabled-chapter:hover { color: #AAA; text-decoration: none; }

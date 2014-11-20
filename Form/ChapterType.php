@@ -38,6 +38,7 @@ class ChapterType extends AbstractType
                     )
                 )
             )
+            ->add('published', 'checkbox', array('required' => false))
         ;
         if($options['chapters'] != null){
             $root = true;

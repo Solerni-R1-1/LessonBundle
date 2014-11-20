@@ -1,4 +1,4 @@
-{% macro recursiveChapter( root, chapter, lesson, isRoot, depth ) %}
+{% macro recursiveChapter( root, chapter, lesson, isRoot, depth, isParentPublished ) %}
 
     {# IF CHILD EMPTY -> MAKE IT SORTABLE #}
     {# IF IS ROOT / depth == 0 -> START A NEW UL CONTAINER WITH TITLE #}
@@ -17,6 +17,7 @@
     {% endif %}
     {% if root.__children|length %}
         {% for child in root.__children %}
+        {% if not child.published or not isParentPublished %}{% set published = false %}{% else %}{% set published = true %}{% endif %}
             {% if child.done %}{% set itemClassDone = ' is-done' %}{% else %}{% set itemClassDone = '' %}{% endif %}
             <li class="slrn-widget__list__item {{ itemClassDone }}" id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
             {% if child.id == chapter.id %}
@@ -24,27 +25,27 @@
                     <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>
                     <i class='icon-angle-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
                 {% else %}
-                    <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>            
+                    <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>  
                 {% endif %}
             {% else %}
                 {% if isRoot %}
                     <div class='menu-item' id = 'menu_item_{{ child.id }}'>
                     <i class='icon-angle-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
                 {% else %}
-                    <div class='menu-item' id = 'menu_item_{{ child.id }}'>  
+                    <div class='menu-item' id = 'menu_item_{{ child.id }}'>
                 {% endif %}
             {% endif %}
             {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
-            {# DO NOT LINK FIRST LEVEL TREE #}
-            {% if not isRoot or is_granted('EDIT', lesson) %}
-                <a class="slrn-widget__title_link" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">
+            {# DO NOT LINK FIRST LEVEL TREE #}  
+            {% if (published and not isRoot) or is_granted('EDIT', lesson) %}
+                <a class="slrn-widget__title_link{% if not published %} slrn-disabled-chapter{% endif %}" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">
             {% else %}
-                <a class="slrn-widget__title_link" name="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">
+                <a class="slrn-widget__title_link{% if not published %} slrn-disabled-chapter{% endif %}" name="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">
             {% endif %}
                 {{ child.title }}</a>
             </div>
                 {% if isRoot %}{% set depth = 1 %}{% else %}{% set depth = depth + 1 %}{% endif %}
-                {{ _self.recursiveChapter(child, chapter, lesson, false, depth ) }}
+                {{ _self.recursiveChapter(child, chapter, lesson, false, depth, published ) }}
             </li>
         {% endfor %}
     {% endif %}
@@ -64,7 +65,7 @@
         </div>
         {%  endif  %}
         {% set depth = 0 %}
-        {{ _self.recursiveChapter( tree, chapter, _resource, true, depth ) }}
+        {{ _self.recursiveChapter( tree, chapter, _resource, true, depth, true ) }}
         <br />
         <div style='display:none;' id = 'moveChapterFormContainer'>
             {% include 'IcapLessonBundle:Lesson:choiceMoveChapterForm.html.twig' %}

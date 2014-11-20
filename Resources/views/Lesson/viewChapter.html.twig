@@ -29,12 +29,14 @@
         </div>
         {%  endif  %}
         <h3 class="slrn-lesson_title lesson_title">
+        	{% set published = true %}
             {% if chapter.level is defined %}
                 {% set myParent = chapter %}
                 {% set myParentLevel = chapter.level %}
                 {% for i in 1..myParentLevel %}
                     {% if i != 1 %}
                         {% set myParent = myParent.parent %}
+                		{% if not myParent.isPublished() %}{% set published = false %}{% endif %}
                     {% endif %}
                 {% endfor %}
                 {{myParent.title}}
@@ -44,6 +46,7 @@
         {{ macros.flashBox() }}
         <div class="row">
             {% if chapter is defined and chapter != null %}
+            	{% if published or is_granted('EDIT', _resource) %}
                 <div class="col-md-12 col-xs-12">
                     <div class='panel panel-default' id='chapter_content' data-current-chapter="{{chapter.getId()}}">
                         <div class='panel-heading chapter_title'><h4 class="slrn-lesson_chapter-title">{{ chapter.title }}</h4></div>
@@ -98,6 +101,17 @@
                        {% endif %}
                    </div>
                 </div>
+                {% else %}
+                <div class="col-md-12">
+                    <div class='panel panel-default' id='chapter_content'>
+                        <div class='chapter_content_text'>
+                            <div class='welcome'>
+                                <div>{{ 'lesson_not_published'|trans({}, 'icap_lesson') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             {% else %}
                 <div class="col-md-12">
                     <div class='panel panel-default' id='chapter_content'>

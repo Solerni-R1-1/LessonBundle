@@ -72,6 +72,11 @@ class Chapter
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $parent;
+    
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $published;
 
     /**
      * @param mixed $id
@@ -238,5 +243,13 @@ class Chapter
     public function getTitle()
     {
         return $this->title;
+    }
+    
+    public function setPublished($published) {
+    	$this->published = $published;
+    }
+    
+    public function isPublished() {
+    	return $this->published;
     }
 }

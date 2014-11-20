@@ -22,6 +22,12 @@
                     {{ form_widget(form.text) }}
                 </div>
             </div>
+            <div class="control-group">
+            	<label class="control-label" for="icap_lesson_chaptertype_draft">{{ 'Published'|trans({}, 'icap_lesson') }}</label>
+            	<div class="controls">
+            		{{ form_widget(form.published) }}
+            	</div>
+            </div>
             {{ form_rest(form) }}
         </fieldset>
         {{ macros.flashBox() }}
