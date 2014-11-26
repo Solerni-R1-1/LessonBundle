@@ -36,8 +36,8 @@
                 {% for i in 1..myParentLevel %}
                     {% if i != 1 %}
                         {% set myParent = myParent.parent %}
-                		{% if not myParent.isPublished() %}{% set published = false %}{% endif %}
                     {% endif %}
+                		{% if not myParent.isPublished() %}{% set published = false %}{% endif %}
                 {% endfor %}
                 {{myParent.title}}
             {% endif %}
@@ -65,7 +65,7 @@
                         	or (next != null and checkChapterLevel( tree, next ) > 1) %}
                         <div class='lesson_footer clearfix'>
                             <div class='col-xs-4 col-md-4 slrn-footer-nav__item align_left'>
-                                {% if previous != null and checkChapterLevel( tree, previous ) > 1 %}
+                                {% if previous != null and checkChapterLevelId( tree, previous ) > 1 %}
                                     <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'>
                                         <i class='icon-chevron-left lesson_footer_icon'></i>{{ 'previous_lesson'|trans({}, 'platform')}}
                                     </a>
@@ -89,7 +89,7 @@
                                 {% endif %}
                             </div>
                             <div class='col-md-4 col-xs-4 slrn-footer-nav__item align_right'>
-                               {% if next != null and checkChapterLevel( tree, next ) > 1 %}
+                               {% if next != null and checkChapterLevelId( tree, next ) > 1 %}
                                    <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'>
                                        {{ 'next_lesson'|trans({}, 'platform')}}<i class='icon-chevron-right lesson_footer_icon'></i>
                                    </a>

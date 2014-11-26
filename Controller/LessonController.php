@@ -334,8 +334,8 @@ class LessonController extends Controller
             'parent'            => $parent,
             'chapter'           => $chapter,
             'form'              => $form_view,
-            'previous'          => $previousChapterSlug,
-            'next'              => $nextChapterSlug,
+            'previous'          => $previousChapterId,
+            'next'              => $nextChapterId,
             'workspace'         => $lesson->getResourceNode()->getWorkspace()
         );
     }
