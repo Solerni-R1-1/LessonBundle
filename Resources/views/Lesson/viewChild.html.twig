@@ -23,14 +23,14 @@
             {% if child.id == chapter.id %}
                 {% if isRoot %}
                     <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>
-                    <i class='icon-angle-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+                    {% if published or is_granted('EDIT', lesson) %}<i class='icon-angle-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>{% endif %}
                 {% else %}
                     <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>  
                 {% endif %}
             {% else %}
                 {% if isRoot %}
                     <div class='menu-item' id = 'menu_item_{{ child.id }}'>
-                    <i class='icon-angle-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+                    {% if published or is_granted('EDIT', lesson) %}<i class='icon-angle-down collapsor {% if not published %}slrn-disabled-chapter{% endif %} {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>{% endif %}
                 {% else %}
                     <div class='menu-item' id = 'menu_item_{{ child.id }}'>
                 {% endif %}
@@ -45,7 +45,7 @@
                 {{ child.title }}</a>
             </div>
                 {% if isRoot %}{% set depth = 1 %}{% else %}{% set depth = depth + 1 %}{% endif %}
-                {{ _self.recursiveChapter(child, chapter, lesson, false, depth, published ) }}
+                {% if published or is_granted('EDIT', lesson) %}{{ _self.recursiveChapter(child, chapter, lesson, false, depth, published ) }}{% endif %}
             </li>
         {% endfor %}
     {% endif %}
