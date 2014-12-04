@@ -76,7 +76,7 @@ class LessonController extends Controller
 	                ->getFirstChapter($lesson);			
 			
 			$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
-			if ($return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()) {
+			if ($return['session'] != null && $return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()) {
 		        if ($chapter != null) {
 		            $return['done'] = $this->getDoneValue($chapter->getId());
 		        } else {
@@ -139,7 +139,9 @@ class LessonController extends Controller
 
 		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
 		
-		if ($return['session']->getMooc()->getLesson()->getId() != $lesson->getResourceNode()->getId()) {
+		
+		if ($return['session'] != null
+				&& $return['session']->getMooc()->getLesson()->getId() != $lesson->getResourceNode()->getId()) {
 			$done = null;
 		}
 		
