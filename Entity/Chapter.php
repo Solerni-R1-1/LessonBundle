@@ -76,7 +76,7 @@ class Chapter
     /**
      * @ORM\Column(type="boolean")
      */
-    private $published;
+    private $published = false;
 
     /**
      * @param mixed $id
