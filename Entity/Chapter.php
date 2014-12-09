@@ -252,4 +252,12 @@ class Chapter
     public function isPublished() {
     	return $this->published;
     }
+
+    public function hasAllParentsPublished() {
+    	if ($this->getParent() == null) {
+    		return $this->isPublished();
+    	} else {
+    		return $this->isPublished() && $this->getParent()->isPublished();
+    	}
+    }
 }
