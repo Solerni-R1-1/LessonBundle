@@ -76,12 +76,17 @@ class LessonController extends Controller
 	                ->getFirstChapter($lesson);			
 			
 			$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
-			if ($return['session'] != null && $return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()) {
-		        if ($chapter != null) {
-		            $return['done'] = $this->getDoneValue($chapter->getId());
-		        } else {
-		            $return['done'] = false;
-		        }
+			if ($return['session'] != null && 
+                    $return['session']->getMooc() && 
+                    $return['session']->getMooc()->getLesson() && 
+                    $return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()
+            ) {
+                
+                if ($chapter != null) {
+                    $return['done'] = $this->getDoneValue($chapter->getId());
+                } else {
+                    $return['done'] = false;
+                }
 			} else {
 				$return['done'] = null;
 			}
@@ -316,12 +321,20 @@ class LessonController extends Controller
             //path first element is the lesson root, we don't show it in the breadcrumb
             unset($path[0]);
             $this->dispatchChapterReadEvent($lesson, $chapter);
-            $previous = $chapterRepository->getPreviousChapter($chapter);
+            // Get previous published chapter
+            $previous = null;
+            do {
+            	$previous = $chapterRepository->getPreviousChapter($previous == null ? $chapter : $previous);
+            } while ($previous != null && !$previous->hasAllParentsPublished());
             if($previous != null){
                 $previousChapterId = $previous->getId();
                 $previousChapterSlug = $previous->getSlug();
             }
-            $next = $chapterRepository->getNextChapter($chapter);
+            // Get next published chapter
+            $next = null;
+            do {
+            	$next = $chapterRepository->getNextChapter($next == null ? $chapter : $next);
+            } while ($next != null && !$next->hasAllParentsPublished());
             if($next != null){
                 $nextChapterId = $next->getId();
                 $nextChapterSlug = $next->getSlug();
