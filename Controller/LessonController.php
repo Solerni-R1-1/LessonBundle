@@ -128,8 +128,7 @@ class LessonController extends Controller
 
         if (null === $chapter) {
             //Redirect to main lesson
-            return $this->viewLessonAction($lesson);
-            //throw $this->createNotFoundException("Chapter not found.");
+            return $this->redirect($this->get('router')->generate('icap_lesson', array( 'resourceId' => $lesson->getId() ) ) );
         }
 
         $return = $this->getChapterView($lesson, $chapter);
