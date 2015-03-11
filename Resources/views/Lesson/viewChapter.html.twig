@@ -54,11 +54,11 @@
                            {{ chapter.text | raw }}
                         </div>
                         <div class="slrn-forum-widget">
-                        {# FORUM WIDGET #}
-                        <hr class="slrn-sep" />
-                        {% if session is defined and session and session.getForum()|default %}
-                        	{% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
-                        {% endif %}
+                            {# FORUM WIDGET #}
+                            <hr class="slrn-sep" />
+                            {% if session|default and session.getForum()|default %}
+                                {% render controller( 'ClarolineForumBundle:Forum:forumsWidget', {'nodeId': session.getForum().getId() } ) %}
+                            {% endif %}
                         </div>
                         {% if (previous != null and checkChapterLevel( tree, previous ) > 1)
                         	or (done is not null)
