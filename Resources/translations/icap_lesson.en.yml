@@ -52,5 +52,5 @@ Your chapter has not been deleted: 'Your chapter has not been deleted'
 Your chapter has been modified: 'Your chapter has been modified'
 Your chapter has not been modified: 'Your chapter has not been modified'
 Your chapter has been deleted but no subchapter: 'Your chapter has been deleted but no subchapter'
-
-
+Published: 'Publish the chapter ?'
+lesson_not_published: 'This chapter has not been published'

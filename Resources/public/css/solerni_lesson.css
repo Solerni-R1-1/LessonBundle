@@ -197,3 +197,8 @@ body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height
 
 .slrn-disabled-chapter { color: #AAA; }
 .slrn-disabled-chapter:hover { color: #AAA; text-decoration: none; }
+
+#chapter_content img {
+    max-width:  672px !important;
+    height:     auto;
+}
