@@ -42,7 +42,7 @@
                 {{myParent.title}}
             {% endif %}
         </h3>
-        
+
         {{ macros.flashBox() }}
         <div class="row">
             {% if chapter is defined and chapter != null %}
@@ -132,13 +132,21 @@
 {% block javascripts %}
     {{ parent() }}
     <!--[if IE 8 ]>
-        <script src="{{ asset('bundles/orangelesson/js/railroad.js') }}"></script>
+        <script>
+            jQuery('.slrn-widget__list--railroad').each( function() {
+                // Only for lists > 1
+                items = jQuery(this).children();
+                if ( items && items.length > 1 ) {
+                    pseudoheight = jQuery(this).height() - 48;
+                    jQuery(this).prepend('<div style="height: ' + pseudoheight + 'px" class="slrn-widget__list--railroad__pseudo"></div>');
+                }
+            });
+        </script>
     <![endif]-->
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/ajaxifyLesson.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/lesson.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icaplesson/js/lessonDone.js') }}'></script>
-
     <script type="text/javascript">
         init();
     </script>
