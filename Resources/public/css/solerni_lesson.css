@@ -1,10 +1,10 @@
-/* 
+/*
  * This file is part of Solerni.
- * 
+ *
  * Copyright (C) 2014 Orange
- * 
+ *
  * Description: CSS for Lesson Bundle Override
- * 
+ *
  * This source file is licensed under the terms of the MIT licence: http://spdx.org/licences/MIT
  */
 
@@ -50,12 +50,12 @@ ul.jquery-sortable-list--lesson li .active_chapter a { color: #D90045; font-weig
     width: .5em;
     height: calc( 100% - 3em - 1em );
     left: 1em;
-    background-color: #FF004F; 
+    background-color: #FF004F;
     top: 2em;
     box-shadow: 1px 2px 2px #999999;
 }
 .slrn-widget__list--railroad .slrn-widget__list__item {
-    top: -.5em; 
+    top: -.5em;
     padding-left: 2em;
 }
 /* RAILROAD BULLETS */
@@ -73,8 +73,8 @@ ul.jquery-sortable-list--lesson li .active_chapter a { color: #D90045; font-weig
 }
 .slrn-widget__list--railroad .slrn-widget__list__item.is-done:before { background-color: #FF004F; }
 
-/* drag n drop quick fixers  */ 
-body.dragging .jquery-sortable-list--lesson .slrn-widget__list, 
+/* drag n drop quick fixers  */
+body.dragging .jquery-sortable-list--lesson .slrn-widget__list,
 body.dragging .jquery-sortable-list--lesson .slrn-widget__list__item { position: static; }
 body.dragging .slrn-widget__list--railroad:before { display: none; }
 body.dragging .slrn-widget__list__item:before { display: none; }
@@ -122,49 +122,49 @@ body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height
 .btn-done-lesson,
 .btn-done-lesson:active,
 .btn-done-lesson:focus {
-    color: #FF004F; 
+    color: #FF004F;
     color: rgba( 255, 0, 79, .6 );
     border: 3px solid #FF004F;
-    border-top-left-radius: 0; 
-    border-bottom-left-radius: 0; 
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     position: relative;
     height: 2.8em;
     background-color: transparent;
     outline: 0;
-    overflow: visible;    
+    overflow: visible;
 }
 .btn-done-lesson:active {
     box-shadow: 1px 1px 6px rgba( 255, 0, 79, .6 ) inset !important;
-    
+
 }
 .btn-done-lesson:hover {
-    color: #333; 
+    color: #333;
     color: rgba( 255, 0, 79, 1 );
     background-color: transparent;
     border-color: #FF004F;
 }
-.btn-done-lesson:before { 
-        font-family: "FontAwesome"; 
-        content: "\f00c"; 
-        position: absolute; 
-        color: #FF004F; 
-        color: rgba( 255, 0, 79, .6 ); 
+.btn-done-lesson:before {
+        font-family: "FontAwesome";
+        content: "\f00c";
+        position: absolute;
+        color: #FF004F;
+        color: rgba( 255, 0, 79, .6 );
         border: 3px solid #FF004F;
-        border-top-left-radius: 4px; 
-        border-bottom-left-radius: 4px; 
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
         height: 2.8em;
-        width: 2em; 
+        width: 2em;
         left: -2.4em;
         top: -3px;
         line-height: 2.5em;
         text-align: center;
 }
 .btn-done-lesson.is-done {
-    color: #FFF;
+    color: #FFF !important;
     background-color: #FF004F;
 }
 .btn-done-lesson.is-done:before {
-    color: #FFF;
+    color: #FFF !important;
     background-color: #FF004F;
 }
 .btn-done-lesson:disabled,
@@ -181,7 +181,7 @@ body.dragging .jquery-sortable-list--lesson .dragged .empty { padding: 0; height
 * CSS when widget is inserted inside Override Lesson Bundle
 */
 .slrn-widget-forum { background-color: #EEEEEF; padding: 1em 1.3em; margin-bottom: 2em; }
-.slrn-widget-forum__title { 
+.slrn-widget-forum__title {
     text-transform: uppercase;
     font-size: 1.3em;
     margin: 0 0 1em 0;
