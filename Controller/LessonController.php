@@ -50,7 +50,7 @@ class LessonController extends Controller
 
         $logEvent = new LogResourceReadEvent($lesson->getResourceNode());
         $this->get('event_dispatcher')->dispatch('log', $logEvent);
-        
+
         return true;
     }
 
@@ -73,15 +73,15 @@ class LessonController extends Controller
 			$chapter = $this->getDoctrine()
 	                ->getManager()
 	                ->getRepository('IcapLessonBundle:Chapter')
-	                ->getFirstChapter($lesson);			
-			
+	                ->getFirstChapter($lesson);
+
 			$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
-			if ($return['session'] != null && 
-                    $return['session']->getMooc() && 
-                    $return['session']->getMooc()->getLesson() && 
+			if ($return['session'] != null &&
+                    $return['session']->getMooc() &&
+                    $return['session']->getMooc()->getLesson() &&
                     $return['session']->getMooc()->getLesson()->getId() == $lesson->getResourceNode()->getId()
             ) {
-                
+
                 if ($chapter != null) {
                     $return['done'] = $this->getDoneValue($chapter->getId());
                 } else {
@@ -90,12 +90,12 @@ class LessonController extends Controller
 			} else {
 				$return['done'] = null;
 			}
-        	
+
 	        if ($return['tree'] != null) {
 	        	$this->populateTreeWithDoneValue($return['tree']);
 	        }
 
-	
+
 	        return $return;
         } else {
         	return $this->redirect($this->get('router')->generate('mooc_view', array('moocId' => $lesson->getResourceNode()->getWorkspace()->getMooc()->getId(), 'moocName' => $lesson->getResourceNode()->getWorkspace()->getMooc()->getTitle())));
@@ -116,7 +116,7 @@ class LessonController extends Controller
     {
         $this->checkAccess("OPEN", $lesson);
         $workspace = $lesson->getResourceNode()->getWorkspace();
-        
+
         $chapter = null;
         //for compliance with old permalinks using chapter ID
         if(is_numeric($chapterId)){
@@ -133,7 +133,7 @@ class LessonController extends Controller
 
         $return = $this->getChapterView($lesson, $chapter);
 
-		
+
 
         if ($return['tree'] != null) {
 			$done = $this->populateTreeWithDoneValue($return['tree'], $chapter->getId());
@@ -142,15 +142,16 @@ class LessonController extends Controller
         }
 
 		$return['session'] = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Mooc\\MoocSession')->guessMoocSession($workspace, $user);
-		
-		
+
+
 		if ($return['session'] != null
+                && $return['session']->getMooc()->getLesson()
 				&& $return['session']->getMooc()->getLesson()->getId() != $lesson->getResourceNode()->getId()) {
 			$done = null;
 		}
-		
+
 		$return['done'] = ( $done instanceof Done ) ? $done->getDone() : false;
-		
+
         return $return;
     }
 
@@ -213,7 +214,7 @@ class LessonController extends Controller
      * Populate "done values" of a lesson tree. Assumed that it's well formated.
      * @param array $tree
      */
-    private function populateTreeWithDoneValue(&$tree, $returnValueForId = -1) {	    	
+    private function populateTreeWithDoneValue(&$tree, $returnValueForId = -1) {
 		$flattenedTree = array();
 		// Flatten tree...
 		$this->flattenTree($tree, $flattenedTree);
@@ -223,18 +224,18 @@ class LessonController extends Controller
 		// If user is connected
 		if(is_object($user) && $user instanceof User) {
 			$doneRepo = $this->getDoctrine()->getRepository('IcapLessonBundle:Done');
-			
+
 			$ids = array();
 			foreach ($flattenedTree as $chapter) {
 				$ids[] = $chapter['id'];
 			}
 			$dones = $doneRepo->getDonesByUserAndChapterIn($user, $ids);
-			
+
 			$orderedDones = array();
 			foreach ($dones as $done) {
 				$orderedDones[$done->getLesson()->getId()] = $done;
 			}
-			
+
 			foreach ($flattenedTree as &$chapter) {
 				if (array_key_exists($chapter['id'], $orderedDones)) {
 					$done = $orderedDones[$chapter['id']];
@@ -243,22 +244,22 @@ class LessonController extends Controller
 					$chapter['done'] = false;
 				}
 			}
-			
+
 		// If user is not connected, set all "done" as false
 		} else {
 			foreach ($flattenedTree as &$chapter) {
 				$chapter['done'] = false;
 			}
 		}
-		
+
 		if ($returnValueForId != -1) {
 			return array_key_exists($returnValueForId, $orderedDones) ? $orderedDones[$returnValueForId] : false;
 		} else {
 			return false;
 		}
-		
+
     }
-    
+
     private function flattenTree(&$tree, &$result) {
     	$result[] = &$tree;
     	if (array_key_exists('__children', $tree)) {
