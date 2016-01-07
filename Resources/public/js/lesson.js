@@ -80,10 +80,18 @@ function initSortable(){
     })
 }
 
+
+/*
+ * Collapsor for badges
+ */
+
 function initCollapsor(){
+
+    $('.list_full_badges').hide().removeClass('hide');
     $('.collapsor').each(function() {
-        $(this).click(function() {
-            toggleCollapsor($(this));
+        var that = $(this);
+        $(this).parent().click(function() {
+            toggleCollapsor($(that));
         });
     });
 
@@ -105,6 +113,10 @@ function toggleCollapsor(obj){
     $('#list_'+chapter_id).slideToggle(300);
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-angle-down');
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-angle-right');
+
+    if (chapter_id == "badges"){
+        $('.list_full_badges').slideToggle( 250, 'linear' );
+    }
 }
 
 function collapse(obj){

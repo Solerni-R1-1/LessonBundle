@@ -65,16 +65,7 @@ jQuery( document ).ready(function() {
         });
     }
     
-    /*
-     * Collapsor for badges
-     */
-    fullListBadges = jQuery('.list_full_badges');
-    fullListBadges.hide().removeClass('hide');
-    jQuery('.slrn-widget--badges .collapsor').on( 'click', function() {
-        fullListBadges.slideToggle( 250, 'linear' );
-    });
-
-    /*
+     /*
      * Close all Lesson Collapsor
      * except the last one see.
      * Find the current Chapter -> get pertinent parent -> get siblings -> get collapsors -> trigger collapsors
